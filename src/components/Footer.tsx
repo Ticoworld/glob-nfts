@@ -52,8 +52,8 @@ const Footer: React.FC = () => {
                 className="mb-6"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-chaos-pink rounded-full flex items-center justify-center">
-                    <FiGlobe className="text-dark-900" size={20} />
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
+                    <img src="/images/logo.jpg" alt="GlobNFTs Logo" className="w-full h-full object-cover" />
                   </div>
                   <span className="text-2xl font-bold">
                     <span className="text-primary">Glob</span>NFTs

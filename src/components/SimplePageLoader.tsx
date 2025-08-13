@@ -69,8 +69,8 @@ const SimplePageLoader: React.FC<SimplePageLoaderProps> = ({ isLoading, onComple
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                   className="w-20 h-20 border-2 border-primary/30 rounded-full absolute inset-0"
                 />
-                <div className="w-20 h-20 bg-gradient-to-br from-primary to-chaos-pink rounded-full flex items-center justify-center">
-                  <FiGlobe className="text-dark-900" size={32} />
+                <div className="w-20 h-20 rounded-full flex items-center justify-center overflow-hidden">
+                  <img src="/images/logo.jpg" alt="GlobNFTs Logo" className="w-full h-full object-cover" />
                 </div>
               </div>
             </motion.div>
