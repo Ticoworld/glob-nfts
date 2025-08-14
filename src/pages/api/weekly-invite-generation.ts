@@ -18,11 +18,11 @@ function generateCode() {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
 
-  // Only allow POST and require secret
-  if (req.method !== 'POST') {
+  // Allow GET and POST, require secret from body or query
+  if (req.method !== 'POST' && req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  const { secret } = req.body;
+  const secret = req.body?.secret || req.query?.secret;
   if (secret !== CRON_SECRET) {
     return res.status(403).json({ error: 'Forbidden' });
   }
