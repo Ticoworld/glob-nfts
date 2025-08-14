@@ -1,10 +1,11 @@
 'use client'
 
-import { wagmiAdapter, projectId } from '../config';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createAppKit } from '@reown/appkit/react';
 import React, { type ReactNode } from 'react';
 import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi';
+import { wagmiAdapter, projectId } from '../config';
+import { appkitNetworks } from '../config/appkitNetwork';
 
 const queryClient = new QueryClient();
 
@@ -22,9 +23,9 @@ const metadata = {
 export const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [wagmiAdapter.wagmiConfig.chains[0]],
-  defaultNetwork: wagmiAdapter.wagmiConfig.chains[0],
-  metadata: metadata,
+  networks: appkitNetworks,
+  defaultNetwork: appkitNetworks[0],
+  metadata,
   features: {
     analytics: true
   }
@@ -41,3 +42,5 @@ function ContextProvider({ children, cookies }: { children: ReactNode; cookies: 
 }
 
 export default ContextProvider;
+
+

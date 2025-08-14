@@ -12,10 +12,10 @@ const Header: React.FC = () => {
 
 
   const navItems = [
+    { name: 'About', href: '#about' }, // Combines vision, roadmap, utility
     { name: 'Gallery', href: '#gallery' },
-    { name: 'Events', href: '#events' },
-    { name: 'Community', href: '#community' },
-    { name: 'Leaderboard', href: '#leaderboard' },
+    { name: 'Chaos Battle', href: '#chaos-battle' },
+    { name: 'Join Whitelist', href: '#whitelist' },
   ];
 
 
@@ -202,7 +202,7 @@ const Header: React.FC = () => {
                   <div className="text-center">
                     <div className="text-sm text-gray-400 mb-2">Live on HyperLiquid</div>
                     <div className="text-xs text-gray-500">
-                      Professional NFT marketplace
+                      Community-driven NFT collection
                     </div>
                   </div>
                 </div>

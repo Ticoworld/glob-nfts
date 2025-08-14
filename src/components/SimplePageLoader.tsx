@@ -91,7 +91,7 @@ const SimplePageLoader: React.FC<SimplePageLoaderProps> = ({ isLoading, onComple
               transition={{ duration: 0.5, delay: 0.3 }}
               className="text-gray-400 mb-8"
             >
-              Professional NFT Marketplace on HyperLiquid
+              Community-driven NFT collection on HyperLiquid
             </motion.p>
 
             {/* Simple Loading Spinner */}

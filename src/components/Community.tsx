@@ -24,7 +24,7 @@ const Community: React.FC = () => {
       icon: FiTwitter, 
       href: '#', 
       members: '28.3K', 
-      description: 'Follow us for the latest updates, market insights, and community highlights.',
+  description: 'Follow us for the latest updates and community highlights.',
       color: 'bg-blue-500' 
     },
     { 
@@ -45,8 +45,7 @@ const Community: React.FC = () => {
     },
     {
       icon: FiTrendingUp,
-      title: 'Market Insights',
-      description: 'Access real-time analytics, floor price tracking, and trading recommendations.',
+  // Market Insights feature removed
     },
     {
       icon: FiMessageCircle,

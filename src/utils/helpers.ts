@@ -5,10 +5,7 @@ export const formatAddress = (address: string, startLength = 6, endLength = 4): 
   return `${address.slice(0, startLength)}...${address.slice(-endLength)}`;
 };
 
-export const formatPrice = (price: number | string): string => {
-  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
-  return numPrice.toFixed(3);
-};
+// formatPrice removed (no marketplace features)
 
 export const formatNumber = (num: number): string => {
   if (num >= 1000000) {

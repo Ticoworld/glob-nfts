@@ -10,7 +10,7 @@ const Gallery: React.FC = () => {
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'price' | 'date'>('name');
+  const [sortBy, setSortBy] = useState<'name' | 'date' | 'popularity'>('name');
   const [isLoading, setIsLoading] = useState(false);
   const { success, info } = useToast();
   
@@ -24,8 +24,8 @@ const Gallery: React.FC = () => {
 
   const sortOptions = [
     { value: 'name', label: 'Name' },
-    { value: 'price', label: 'Price' },
-    { value: 'date', label: 'Recently Listed' }
+    { value: 'date', label: 'Recently Added' },
+    { value: 'popularity', label: 'Popularity' }
   ];
   
   // Professional NFT data - fixed values to prevent hydration errors
@@ -33,13 +33,11 @@ const Gallery: React.FC = () => {
     id: i + 1,
     name: `Genesis Collection #${String(i + 1).padStart(4, '0')}`,
     category: ['genesis', 'legendary', 'rare', 'digital-art'][i % 4],
-    price: (0.08 + (i * 0.03)).toFixed(3),
-    likes: 50 + (i * 15), // Fixed values instead of random
-    views: 200 + (i * 87), // Fixed values instead of random
-    rarity: ['Common', 'Rare', 'Epic', 'Legendary'][i % 4], // Predictable pattern
+    likes: 50 + (i * 15),
+    views: 200 + (i * 87),
+    rarity: ['Common', 'Rare', 'Epic', 'Legendary'][i % 4],
     creator: `Creator${String(i + 1).padStart(2, '0')}`,
-    lastSale: (0.05 + (i * 0.02)).toFixed(3),
-    listed: `Aug ${(i % 30) + 1}` // Fixed date pattern
+    added: `Aug ${(i % 30) + 1}`
   }));
   
   // Enhanced filtering and search with useMemo for performance
@@ -65,10 +63,10 @@ const Gallery: React.FC = () => {
     // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'price':
-          return parseFloat(b.price) - parseFloat(a.price);
+        case 'popularity':
+          return (b.likes + b.views) - (a.likes + a.views);
         case 'date':
-          return b.id - a.id; // Assuming higher ID = more recent
+          return b.id - a.id;
         case 'name':
         default:
           return a.name.localeCompare(b.name);
@@ -116,7 +114,7 @@ const Gallery: React.FC = () => {
             transition={{ delay: 0.1 }}
             className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed"
           >
-            Discover exceptional digital artworks from our curated collection of NFTs on the HyperLiquid ecosystem.
+            Explore creative, community-driven NFTs. Discover unique digital art, meet the creators, and see what’s trending in the chaos!
           </motion.p>
         </div>
         
@@ -156,9 +154,9 @@ const Gallery: React.FC = () => {
                     }`}
                   >
                     <span className="whitespace-nowrap">{category.label}</span>
-                    <span className="text-xs opacity-75 bg-black/20 px-1.5 py-0.5 rounded">
-                      {activeCategory === category.value ? filteredAndSortedNfts.length : category.count}
-                    </span>
+                      <span className="text-xs opacity-75 bg-black/20 px-1.5 py-0.5 rounded">
+                        {activeCategory === category.value ? filteredAndSortedNfts.length : category.count}
+                      </span>
                   </button>
                 ))}
               </div>
@@ -170,7 +168,7 @@ const Gallery: React.FC = () => {
                 <span className="text-gray-400 font-medium whitespace-nowrap">Sort:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as 'name' | 'price' | 'date')}
+                  onChange={(e) => setSortBy(e.target.value as 'name' | 'date' | 'popularity')}
                   className="bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary min-w-0"
                 >
                   {sortOptions.map(option => (
@@ -237,21 +235,13 @@ const Gallery: React.FC = () => {
                       className="group-hover:scale-105 transition-transform duration-300"
                       fallbackSrc="/images/placeholder.jpg"
                     />
-                    
                     {/* Subtle overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-chaos-pink/5 opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                    
-                    {/* Price Badge */}
-                    <div className="absolute top-4 right-4 bg-dark-900/90 backdrop-blur-sm text-primary px-3 py-1.5 rounded-lg font-semibold text-sm border border-primary/20">
-                      {nft.price} ETH
-                    </div>
-                    
                     {/* Rarity Badge */}
                     <div className={`absolute top-4 left-4 px-2 py-1 rounded-lg text-xs font-medium border ${getRarityColor(nft.rarity)}`}>
                       {nft.rarity}
                     </div>
-
-                    {/* Professional hover actions */}
+                    {/* Community hover actions */}
                     <div className="absolute inset-0 bg-dark-900/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-3">
                       <button 
                         className="w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
@@ -275,25 +265,12 @@ const Gallery: React.FC = () => {
                       </button>
                     </div>
                   </div>
-
                   <div className="p-5">
                     <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-1">{nft.name}</h3>
                     <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
                       <span>by {nft.creator}</span>
                       <span className="capitalize">{nft.category}</span>
                     </div>
-                    
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <div className="text-xs text-gray-400 mb-1">Last Sale</div>
-                        <div className="font-semibold text-white">{nft.lastSale} ETH</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xs text-gray-400 mb-1">Listed</div>
-                        <div className="font-semibold text-white">{nft.listed}</div>
-                      </div>
-                    </div>
-                    
                     <div className="flex justify-between items-center text-sm">
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-1.5 text-gray-400">
@@ -305,9 +282,7 @@ const Gallery: React.FC = () => {
                           <span>{nft.views}</span>
                         </div>
                       </div>
-                      <button className="btn-primary text-sm px-4 py-2">
-                        View Details
-                      </button>
+                      <span className="text-xs text-gray-400">Added: {nft.added}</span>
                     </div>
                   </div>
                 </motion.div>
@@ -335,10 +310,9 @@ const Gallery: React.FC = () => {
                       src={`/images/nft${(nft.id % 5) + 1}.jpg`}
                       alt={nft.name}
                       className="w-full h-full object-cover"
-                      lazy={false} // Don't lazy load in list view since they're visible
+                      lazy={false}
                     />
                   </div>
-
                   <div className="flex-grow">
                     <h3 className="font-semibold text-xl mb-2 group-hover:text-primary transition-colors">{nft.name}</h3>
                     <div className="flex items-center gap-6 text-sm text-gray-400 mb-3">
@@ -349,32 +323,18 @@ const Gallery: React.FC = () => {
                       </span>
                     </div>
                     <div className="flex items-center gap-8">
-                      <div>
-                        <span className="text-gray-400">Current Price: </span>
-                        <span className="text-primary font-semibold">{nft.price} ETH</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-400">Last Sale: </span>
-                        <span className="font-semibold">{nft.lastSale} ETH</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-400">Listed: </span>
-                        <span className="font-semibold">{nft.listed}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-4 text-gray-400">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 text-gray-400">
                         <FiHeart size={16} />
                         <span>{nft.likes}</span>
                       </div>
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 text-gray-400">
                         <FiEye size={16} />
                         <span>{nft.views}</span>
                       </div>
+                      <span className="text-xs text-gray-400">Added: {nft.added}</span>
                     </div>
+                  </div>
+                  <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2">
                       <button 
                         onClick={() => handleShare(nft.id)}
@@ -389,7 +349,6 @@ const Gallery: React.FC = () => {
                     </div>
                   </div>
                 </div>
-
                 {/* Mobile/Tablet Layout */}
                 <div className="lg:hidden">
                   <div className="flex gap-4 mb-4">
@@ -412,23 +371,6 @@ const Gallery: React.FC = () => {
                       </div>
                     </div>
                   </div>
-
-                  {/* Price Info - Responsive Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 text-sm">
-                    <div>
-                      <div className="text-gray-400 text-xs mb-1">Current Price</div>
-                      <div className="text-primary font-semibold">{nft.price} ETH</div>
-                    </div>
-                    <div>
-                      <div className="text-gray-400 text-xs mb-1">Last Sale</div>
-                      <div className="font-semibold">{nft.lastSale} ETH</div>
-                    </div>
-                    <div className="col-span-2 sm:col-span-1">
-                      <div className="text-gray-400 text-xs mb-1">Listed</div>
-                      <div className="font-semibold">{nft.listed}</div>
-                    </div>
-                  </div>
-
                   {/* Stats and Actions */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 text-gray-400">
@@ -440,6 +382,7 @@ const Gallery: React.FC = () => {
                         <FiEye size={14} />
                         <span className="text-sm">{nft.views}</span>
                       </div>
+                      <span className="text-xs text-gray-400">Added: {nft.added}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <button 

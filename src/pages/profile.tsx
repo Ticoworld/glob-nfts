@@ -81,8 +81,7 @@ const Profile: React.FC = () => {
         </Link>
       </div>
 
-  {/* Glob2Earn Dashboard (commented out for now) */}
-  {/* <Glob2EarnDashboard /> */}
+  <Glob2EarnDashboard />
 
       {/* Main Content */}
       <main className="flex-grow flex flex-col items-center w-full">

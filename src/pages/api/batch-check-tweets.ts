@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           author_id: tweet.author_id,
           created_at: tweet.created_at,
           hasGlobNFT: /#?globnft/i.test(text),
-          hasOfficialMention: /@OfficialGlobNFT/i.test(text),
+          hasGlobNftsMention: /@TheGlobNfts/i.test(text),
         });
       }
     } catch (err) {

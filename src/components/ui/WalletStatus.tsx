@@ -89,18 +89,7 @@ const WalletStatus: React.FC<WalletStatusProps> = ({
         )}
       </div>
       
-      {status === 'connected' && balance && (
-        <div className="text-right">
-          <div className="text-sm font-medium text-white">
-            {balance} ETH
-          </div>
-          {network && (
-            <div className="text-xs text-gray-400">
-              {network}
-            </div>
-          )}
-        </div>
-      )}
+  {/* Balance removed for community/leaderboard focus */}
     </motion.div>
   );
 };

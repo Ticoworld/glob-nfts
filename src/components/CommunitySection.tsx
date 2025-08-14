@@ -45,7 +45,7 @@ const CommunitySection: React.FC = () => {
     },
     {
       title: 'Trading Insights',
-      description: 'Share and discover trading strategies with fellow collectors and traders.',
+  description: 'Share and discover creative ideas with fellow collectors.',
       icon: FiTrendingUp
     },
     {

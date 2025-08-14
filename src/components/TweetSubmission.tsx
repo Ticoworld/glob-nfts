@@ -60,8 +60,8 @@ const TweetSubmission: React.FC = () => {
   return (
     <div id="tweet-submission-section" className="bg-dark-800 border border-dark-700 rounded-xl p-6 mt-8 max-w-lg mx-auto">
       <h2 className="text-lg font-bold text-primary">Glob2Earn: Tweet Task</h2>
-      <div className="text-gray-400 text-sm mb-2">You can submit up to <b>2 tweets per week</b> for points.</div>
-      <div className="text-green-400 font-semibold mb-2">Tweets submitted this week: {tweetCount} / 2</div>
+  <div className="text-gray-400 text-sm mb-2">You can submit up to <b>5 tweets per week</b> for points.</div>
+  <div className="text-green-400 font-semibold mb-2">Tweets submitted this week: {tweetCount} / 5</div>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
           type="text"
@@ -69,12 +69,12 @@ const TweetSubmission: React.FC = () => {
           onChange={e => setTweetUrl(e.target.value)}
           className="px-4 py-2 rounded-lg border border-dark-600 bg-dark-900 text-white focus:outline-none focus:border-primary"
           placeholder="Paste your tweet link here"
-          disabled={status === 'submitting' || tweetCount >= 2}
+          disabled={status === 'submitting' || tweetCount >= 5}
         />
         <button
           type="submit"
           className="bg-primary text-dark-900 font-semibold rounded-lg px-4 py-2 hover:bg-primary/90 transition-all"
-          disabled={!tweetUrl || status === 'submitting' || tweetCount >= 2}
+          disabled={!tweetUrl || status === 'submitting' || tweetCount >= 5}
         >
           {status === 'submitting' ? 'Submitting...' : 'Submit Tweet'}
         </button>
@@ -105,6 +105,13 @@ const TweetSubmission: React.FC = () => {
                   {tweet.status === 'rejected' && <span className="text-red-400">Rejected</span>}
                 </span>
                 <span className="text-xs text-gray-500">{tweet.createdAt ? new Date(tweet.createdAt).toLocaleString() : ''}</span>
+                {tweet.status === 'verified' && (
+                  <span className="text-xs text-green-300 ml-2">Points: {tweet.pointsAwarded || 1}
+                    {typeof tweet.bonusPoints === 'number' && tweet.bonusPoints > 0 && (
+                      <span className="text-yellow-300 ml-1">(+{tweet.bonusPoints} bonus)</span>
+                    )}
+                  </span>
+                )}
                 {tweet.status === 'rejected' && tweet.rejectionReason && (
                   <span className="text-xs text-red-300 italic">Reason: {tweet.rejectionReason}</span>
                 )}

@@ -45,9 +45,11 @@ const InviteDashboard: React.FC = () => {
 
   return (
     <div className="bg-dark-800 border border-dark-700 rounded-xl p-6 mt-8 max-w-lg mx-auto">
-      <h2 className="text-lg font-bold mb-4 text-primary">Your Invite Codes</h2>
-      <div className="mb-2 text-green-400 font-semibold">Your Points: {points}</div>
-      <div className="mb-4 text-blue-400 font-semibold">Points from Invites: {invitePoints}</div>
+  <h2 className="text-lg font-bold mb-4 text-primary">Your Invite Codes</h2>
+  <div className="mb-2 text-green-400 font-semibold">Total Points: {points + invitePoints}</div>
+  <div className="mb-2 text-blue-400 font-semibold">Base & Bonus Points: {points}</div>
+  <div className="mb-4 text-yellow-400 font-semibold">Points from Invites: {invitePoints}</div>
+  <div className="mb-4 text-xs text-gray-400">Base & bonus points are earned from tweets. Invite points are earned when your invitees complete tasks.</div>
       {loading ? (
         <div className="text-gray-400">Loading...</div>
       ) : error ? (

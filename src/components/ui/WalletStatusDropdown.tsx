@@ -7,7 +7,6 @@ export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'er
 interface WalletStatusProps {
   status: ConnectionStatus;
   address?: string;
-  balance?: string;
   network?: string;
   className?: string;
   onDisconnect?: () => void;
@@ -16,7 +15,6 @@ interface WalletStatusProps {
 const WalletStatus: React.FC<WalletStatusProps> = ({
   status,
   address,
-  balance,
   network,
   className = '',
   onDisconnect,
@@ -112,12 +110,7 @@ const WalletStatus: React.FC<WalletStatusProps> = ({
         {status === 'connected' && (
           <FiChevronDown className="text-gray-400 ml-2" size={16} />
         )}
-        {status === 'connected' && balance && (
-          <div className="text-right ml-2">
-            <div className="text-sm font-medium text-white">{balance} ETH</div>
-            {network && <div className="text-xs text-gray-400">{network}</div>}
-          </div>
-        )}
+  {/* Balance removed for community/leaderboard focus */}
       </motion.div>
       {/* Dropdown menu */}
       <AnimatePresence>

@@ -10,12 +10,7 @@ const Footer: React.FC = () => {
       { name: 'GitHub', href: '#', icon: FiGithub },
       { name: 'Newsletter', href: '#', icon: FiMail },
     ],
-    marketplace: [
-      { name: 'Browse NFTs', href: '#gallery' },
-      { name: 'Create', href: '#' },
-      { name: 'Collections', href: '#' },
-      { name: 'Analytics', href: '#' },
-    ],
+  // ...removed marketplace links...
     resources: [
       { name: 'Documentation', href: '#' },
       { name: 'API', href: '#' },
@@ -31,10 +26,9 @@ const Footer: React.FC = () => {
   };
 
   const stats = [
-    { label: 'NFTs Created', value: '10K+' },
-    { label: 'Artists', value: '500+' },
-    { label: 'Collectors', value: '8K+' },
-    { label: 'Volume Traded', value: '1.2K ETH' },
+  { label: 'NFTs Created', value: '10K+' },
+  { label: 'Artists', value: '500+' },
+  { label: 'Collectors', value: '8K+' },
   ];
 
   return (
@@ -101,23 +95,7 @@ const Footer: React.FC = () => {
             {/* Links Sections */}
             <div className="lg:col-span-8">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 }}
-                >
-                  <h4 className="font-bold mb-4 text-primary">Marketplace</h4>
-                  <ul className="space-y-3">
-                    {footerLinks.marketplace.map((link) => (
-                      <li key={link.name}>
-                        <a href={link.href} className="text-gray-400 hover:text-primary transition-colors">
-                          {link.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
+                {/* Marketplace section removed */}
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}

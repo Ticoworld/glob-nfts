@@ -4,6 +4,9 @@ import { useAccount } from 'wagmi';
 import Head from 'next/head';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
+import AboutSection from '../components/AboutSection';
+import ChaosBattleSection from '../components/ChaosBattleSection';
+import WhitelistSection from '../components/WhitelistSection';
 import Gallery from '../components/Gallery';
 import Events from '../components/Events';
 import CommunitySection from '../components/CommunitySection';
@@ -68,15 +71,17 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-        <title>GlobNFTs | World-Class NFT Marketplace on HyperLiquid</title>
-        <meta name="description" content="Discover, collect, and trade unique NFTs on the HyperLiquid blockchain. Professional NFT marketplace featuring exclusive digital art, advanced trading tools, and vibrant community." />
-        <meta name="keywords" content="NFT, HyperLiquid, Blockchain, NFT Marketplace, Digital Art, Collectibles, Crypto Art, Web3, DeFi, Trading" />
+  <title>GlobNFTs | Chaotic Community-Driven NFT Collection</title>
+  <meta name="description" content="GlobNFTs is a chaotic, community-driven NFT collection on HyperLiquid. Make posts, earn points, climb the leaderboard, and unlock future utility as a holder." />
+  <meta name="keywords" content="NFT, HyperLiquid, Blockchain, Digital Art, Collectibles, Community, Leaderboard, Creativity, Web3" />
       </Head>
       <Header />
       <main className="flex-grow" role="main">
         <Hero />
+        <AboutSection />
+        <ChaosBattleSection />
+        <WhitelistSection />
         <Gallery />
-        <Events />
         <CommunitySection />
         <Leaderboard />
       </main>

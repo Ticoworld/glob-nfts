@@ -35,7 +35,7 @@ const Events: React.FC = () => {
       time: '16:00 UTC',
       type: 'education',
       status: 'upcoming',
-      description: 'Learn advanced NFT trading strategies and market analysis techniques.',
+  description: 'Join community events and learn from fellow collectors.',
       participants: 234,
       location: 'Virtual Workshop'
     }

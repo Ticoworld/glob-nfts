@@ -67,30 +67,27 @@ const AdminTweetTasks: React.FC = () => {
   }, []);
 
   const [rejectionReasons, setRejectionReasons] = useState<{ [tweetId: string]: string }>({});
+  const [tweetPoints, setTweetPoints] = useState<{ [tweetId: string]: number }>({});
+  const [bonusPoints, setBonusPoints] = useState<{ [tweetId: string]: number }>({});
   const handleAction = async (tweetId: string, action: 'verified' | 'rejected') => {
     if (!isConnected || !address) {
       toast.error('Connect your admin wallet first.');
       return;
     }
     let rejectionReason = '';
+    let pointsAwarded = tweetPoints[tweetId] || 1;
+    let bonus = bonusPoints[tweetId] || 0;
     if (action === 'rejected') {
       rejectionReason = rejectionReasons[tweetId] || '';
+      pointsAwarded = 0;
+      bonus = 0;
     }
-    setSigning(true);
     setActionStatus(s => ({ ...s, [tweetId]: 'pending' }));
     try {
-      // Message to sign: must be unique per action for replay protection
-      const message = `Moderate tweet ${tweetId} as ${action} at ${Date.now()}`;
-      // @ts-ignore
-      const signature = await window.ethereum.request({
-        method: 'personal_sign',
-        params: [message, address],
-      });
-      setSigning(false);
       const res = await fetch('/api/admin-tweet-tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tweetId, action, wallet: address, message, signature, rejectionReason }),
+        body: JSON.stringify({ tweetId, action, wallet: address, rejectionReason, pointsAwarded, bonus }),
       });
       const data = await res.json();
       if (res.ok && data.success) {
@@ -102,9 +99,8 @@ const AdminTweetTasks: React.FC = () => {
         toast.error(data.error || 'Action failed.');
       }
     } catch (err: any) {
-      setSigning(false);
       setActionStatus(s => ({ ...s, [tweetId]: 'error' }));
-      toast.error('Signature cancelled or failed.');
+      toast.error('Action failed.');
     }
   };
 
@@ -166,8 +162,8 @@ const AdminTweetTasks: React.FC = () => {
                           <span className={result.hasGlobNFT ? 'text-green-400' : 'text-red-400'}>
                             {result.hasGlobNFT ? '#GlobNFT found' : 'No #GlobNFT'}
                           </span>
-                          <span className={result.hasOfficialMention ? 'text-green-400' : 'text-red-400'}>
-                            {result.hasOfficialMention ? '@OfficialGlobNFT found' : 'No @OfficialGlobNFT'}
+                          <span className={result.hasGlobNftsMention ? 'text-green-400' : 'text-red-400'}>
+                            {result.hasGlobNftsMention ? '@TheGlobNfts found' : 'No @TheGlobNfts'}
                           </span>
                         </div>
                       </div>
@@ -186,7 +182,35 @@ const AdminTweetTasks: React.FC = () => {
                   <a href={tweet.tweetUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline break-all">
                     {tweet.tweetUrl}
                   </a>
-                  <div className="flex gap-3 mt-2">
+                  <div className="flex gap-3 mt-2 items-center">
+                    <label className="text-xs text-gray-300">Base Points:
+                      <select
+                        className="ml-2 px-2 py-1 rounded border border-dark-600 bg-dark-900 text-xs text-white focus:outline-none focus:border-green-400"
+                        value={tweetPoints[tweet.tweetId] || 1}
+                        onChange={e => setTweetPoints(tp => ({ ...tp, [tweet.tweetId]: Number(e.target.value) }))}
+                        disabled={actionStatus[tweet.tweetId] === 'pending' || !isConnected || signing}
+                      >
+                        <option value={1}>1</option>
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                      </select>
+                    </label>
+                    <label className="text-xs text-yellow-300 ml-4">Bonus:
+                      <input
+                        type="number"
+                        min={0}
+                        max={10}
+                        className="ml-2 px-2 py-1 rounded border border-dark-600 bg-dark-900 text-xs text-white focus:outline-none focus:border-yellow-400"
+                        value={typeof bonusPoints[tweet.tweetId] === 'number' && bonusPoints[tweet.tweetId] > 0 ? bonusPoints[tweet.tweetId] : ''}
+                        placeholder="0"
+                        onChange={e => {
+                          const val = Number(e.target.value);
+                          setBonusPoints(bp => ({ ...bp, [tweet.tweetId]: isNaN(val) ? 0 : val }));
+                        }}
+                        disabled={actionStatus[tweet.tweetId] === 'pending' || !isConnected || signing}
+                        style={{ width: 60 }}
+                      />
+                    </label>
                     <button
                       className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
                       disabled={actionStatus[tweet.tweetId] === 'pending' || !isConnected || signing}

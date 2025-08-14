@@ -65,11 +65,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const tweetCountToday = dayMatches.length;
 
   // Check daily first (so user sees daily-limit when applicable)
+
   if (tweetCountToday >= 1) {
     return res.status(429).json({ error: 'Daily tweet submission limit reached (1 per day)' });
   }
-  if (tweetCountThisWeek >= 2) {
-    return res.status(429).json({ error: 'Weekly tweet submission limit reached (2 per week)' });
+  if (tweetCountThisWeek >= 5) {
+    return res.status(429).json({ error: 'Weekly tweet submission limit reached (5 per week)' });
   }
 
   const tweetTask = await TweetTask.create({

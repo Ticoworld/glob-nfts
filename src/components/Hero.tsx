@@ -7,10 +7,11 @@ const Hero: React.FC = () => {
     document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Example stats for community engagement
   const stats = [
-    { icon: FiUsers, label: 'Collectors', value: '12.7K', change: '+15%' },
-    { icon: FiBarChart, label: 'Floor Price', value: '0.08 ETH', change: '+8.2%' },
-    { icon: FiTrendingUp, label: 'Volume', value: '2.4K ETH', change: '+23%' },
+    { icon: FiUsers, label: 'Community Members', value: '12.7K', change: '+15%' },
+    { icon: FiTrendingUp, label: 'Leaderboard Entries', value: '2.4K', change: '+23%' },
+    { icon: FiBarChart, label: 'Posts Submitted', value: '8.2K', change: '+8.2%' },
   ];
 
   return (
@@ -23,7 +24,7 @@ const Hero: React.FC = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
             
-            {/* Featured NFT Showcase - Mobile First */}
+            {/* Featured NFT Showcase - Community Focused */}
             <div className="lg:col-span-5 lg:order-2 order-1">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -40,36 +41,24 @@ const Hero: React.FC = () => {
                         alt="Featured NFT"
                         className="w-full h-full object-cover"
                       />
-                      
-                      {/* Price badge */}
-                      <div className="absolute top-4 right-4 bg-dark-900/90 backdrop-blur px-3 py-1.5 rounded-lg">
-                        <span className="text-primary font-semibold">0.08 ETH</span>
-                      </div>
-                      
-                      {/* Collection badge */}
-                      <div className="absolute top-4 left-4 bg-primary/20 backdrop-blur px-3 py-1.5 rounded-lg">
-                        <span className="text-primary font-semibold text-sm">Genesis</span>
+                      {/* Community badge */}
+                      <div className="absolute top-4 left-4 bg-chaos-pink/80 backdrop-blur px-3 py-1.5 rounded-lg">
+                        <span className="text-white font-semibold text-sm">Featured Chaos NFT</span>
                       </div>
                     </div>
-                    
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-4">
                         <div>
                           <h3 className="font-semibold text-lg">Chaos Manifestation #001</h3>
                           <p className="text-gray-400 text-sm">by GlobberArtist</p>
                         </div>
-                        <div className="text-right">
-                          <div className="text-sm text-gray-400">Current bid</div>
-                          <div className="font-semibold">0.08 ETH</div>
-                        </div>
                       </div>
-                      
                       <div className="flex gap-2">
-                        <button className="flex-1 btn-primary">
-                          Place Bid
-                        </button>
-                        <button className="px-4 py-3 border border-gray-600 rounded-lg hover:border-gray-500 transition-colors">
-                          <FiArrowRight size={16} />
+                        <button 
+                          className="flex-1 btn-primary"
+                          onClick={() => document.getElementById('chaos-battle')?.scrollIntoView({ behavior: 'smooth' })}
+                        >
+                          Join Chaos Battle
                         </button>
                       </div>
                     </div>
@@ -98,23 +87,22 @@ const Hero: React.FC = () => {
                 </h1>
                 
                 <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                  Discover, collect, and trade unique NFTs on the HyperLiquid chain. 
-                  Join the revolution of decentralized digital art and creativity.
+                  GlobNFTs is a chaotic, community-driven NFT collection. Make posts about the project, earn points, and climb the leaderboard. Join the chaos, showcase your creativity, and unlock future utility as a holder!
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
                   <button 
-                    onClick={scrollToGallery}
+                    onClick={() => document.getElementById('chaos-battle')?.scrollIntoView({ behavior: 'smooth' })}
                     className="btn-primary inline-flex items-center justify-center gap-2 text-lg"
                   >
-                    Explore Collection
+                    Join Chaos Battle
                     <FiArrowRight size={18} />
                   </button>
                   <button 
                     onClick={scrollToGallery}
                     className="btn-secondary inline-flex items-center justify-center gap-2 text-lg"
                   >
-                    Learn More
+                    Explore Collection
                   </button>
                 </div>
 
