@@ -133,22 +133,7 @@ const Footer: React.FC = () => {
                   </ul>
                 </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <h4 className="font-bold mb-4 text-chaos-purple">Stats</h4>
-                  <div className="space-y-3">
-                    {stats.map((stat) => (
-                      <div key={stat.label}>
-                        <div className="text-2xl font-bold text-primary">{stat.value}</div>
-                        <div className="text-gray-400 text-sm">{stat.label}</div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
+                {/* Stats section removed for honesty. */}
               </div>
             </div>
           </div>

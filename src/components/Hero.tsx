@@ -7,12 +7,7 @@ const Hero: React.FC = () => {
     document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Example stats for community engagement
-  const stats = [
-    { icon: FiUsers, label: 'Community Members', value: '12.7K', change: '+15%' },
-    { icon: FiTrendingUp, label: 'Leaderboard Entries', value: '2.4K', change: '+23%' },
-    { icon: FiBarChart, label: 'Posts Submitted', value: '8.2K', change: '+8.2%' },
-  ];
+  // No fake stats or fictional numbers. Only honest messaging below.
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-12">
@@ -107,26 +102,7 @@ const Hero: React.FC = () => {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 border-t border-gray-800">
-                  {stats.map((stat, index) => (
-                    <motion.div
-                      key={stat.label}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
-                      className="text-center lg:text-left"
-                    >
-                      <div className="flex items-center justify-center lg:justify-start gap-2 mb-1">
-                        <stat.icon className="text-primary" size={16} />
-                        <span className="text-sm text-gray-400">{stat.label}</span>
-                      </div>
-                      <div className="flex items-center justify-center lg:justify-start gap-2">
-                        <span className="text-2xl font-bold">{stat.value}</span>
-                        <span className="text-sm text-green-400 font-medium">{stat.change}</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                {/* Honest messaging only. No stats or numbers displayed. */}
               </motion.div>
             </div>
           </div>

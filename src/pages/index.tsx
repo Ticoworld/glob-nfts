@@ -78,12 +78,12 @@ const Home: React.FC = () => {
       <Header />
       <main className="flex-grow" role="main">
         <Hero />
-        <AboutSection />
-        <ChaosBattleSection />
-        <WhitelistSection />
-        <Gallery />
-        <CommunitySection />
-        <Leaderboard />
+  <AboutSection />
+  <ChaosBattleSection />
+  <WhitelistSection />
+  <Leaderboard />
+  <Gallery />
+  <CommunitySection />
       </main>
       <Footer />
     </div>

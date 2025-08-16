@@ -12,10 +12,10 @@ const Header: React.FC = () => {
 
 
   const navItems = [
-    { name: 'About', href: '#about' }, // Combines vision, roadmap, utility
-    { name: 'Gallery', href: '#gallery' },
-    { name: 'Chaos Battle', href: '#chaos-battle' },
-    { name: 'Join Whitelist', href: '#whitelist' },
+  { name: 'About', href: '#about' }, // Combines vision, roadmap, utility
+  { name: 'Leaderboard', href: '#leaderboard' },
+  { name: 'Gallery', href: '#gallery' },
+  { name: 'Join Whitelist', href: '#whitelist' },
   ];
 
 
