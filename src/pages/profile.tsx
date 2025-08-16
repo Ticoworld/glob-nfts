@@ -51,7 +51,7 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col gap-20 p-3">
       <Header />
 
       {/* Back to Home button under logo & sticky */}
