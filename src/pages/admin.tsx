@@ -5,6 +5,14 @@ import { useRouter } from 'next/router';
 import AdminTweetTasks from '@/components/AdminTweetTasks';
 
 const AdminPage: React.FC = () => {
+  // Debug: Print admin wallets env variable to console
+  useEffect(() => {
+    // Only runs in browser
+    if (typeof window !== 'undefined') {
+      // eslint-disable-next-line no-console
+      console.log('NEXT_PUBLIC_ADMIN_WALLETS:', process.env.NEXT_PUBLIC_ADMIN_WALLETS);
+    }
+  }, []);
   const { isConnected, address } = useWeb3();
   const router = useRouter();
   // Get admin wallets from env (injected at build time)
