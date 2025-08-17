@@ -60,10 +60,31 @@ const Home: React.FC = () => {
   }
 
   if (!allowed) {
-    return <InviteGate onSuccess={() => {
-      setAllowed(true);
-      if (typeof window !== 'undefined' && address) {
-        localStorage.setItem(`glob_registered_${address}`, 'true');
+    return <InviteGate onSuccess={async () => {
+      // After invite, re-check registration from backend for best practice
+      if (address) {
+        try {
+          const res = await fetch(`/api/check-user?wallet=${address}`);
+          const data = await res.json();
+          if (res.ok && data.registered) {
+            setAllowed(true);
+            if (typeof window !== 'undefined') {
+              localStorage.setItem(`glob_registered_${address}`, 'true');
+            }
+          } else {
+            setAllowed(false);
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem(`glob_registered_${address}`);
+            }
+          }
+        } catch {
+          setAllowed(false);
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem(`glob_registered_${address}`);
+          }
+        }
+      } else {
+        setAllowed(false);
       }
     }} />;
   }
