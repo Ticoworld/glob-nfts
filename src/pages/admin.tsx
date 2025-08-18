@@ -1,12 +1,12 @@
 
 import { useEffect } from 'react';
-import { useWeb3 } from '../contexts/Web3Context';
+import { useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
 import AdminTweetTasks from '@/components/AdminTweetTasks';
 
 const AdminPage: React.FC = () => {
   // Debug: Print wallet address and connection status
-    const { isConnected, address } = useWeb3();
+  const { isConnected, address } = useAccount();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
