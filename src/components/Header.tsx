@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { useAccount } from 'wagmi';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX, FiGlobe, FiExternalLink, FiUser } from 'react-icons/fi';
-import LiquidButton from './ui/LiquidButton';
+
+import CustomConnectButton from './CustomConnectButton';
 
 
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+    // Wallet and SIWE status
+    const { address, isConnected } = useAccount();
+    const [siweLoggedIn, setSiweLoggedIn] = useState(false);
+    useEffect(() => {
+      setSiweLoggedIn(document.cookie.includes('sid='));
+    }, []);
 
 
   const navItems = [
@@ -103,7 +111,28 @@ const Header: React.FC = () => {
               >
                 <FiUser size={20} />
               </Link>
-              <appkit-button />
+              <div className="min-w-[220px] max-w-xs text-base rounded-xl flex items-center justify-center">
+                  {/* Only show connect button if not connected */}
+                  {!isConnected && <CustomConnectButton />}
+                  {/* Show wallet address and logout if connected and SIWE signed in */}
+                  {isConnected && address && siweLoggedIn && (
+                    <span className="font-mono text-base bg-dark-800 px-3 py-1 rounded-lg text-primary mr-2">
+                      {address.slice(0, 6)}...{address.slice(-4)}
+                    </span>
+                  )}
+                  {isConnected && siweLoggedIn && (
+                    <button
+                      onClick={() => {
+                        document.cookie = 'sid=; Max-Age=0; path=/;';
+                        window.location.reload();
+                      }}
+                      className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition-all ml-2"
+                      title="Log out"
+                    >
+                      Log out
+                    </button>
+                  )}
+              </div>
             </motion.div>
 
             {/* Mobile Profile Icon & Menu Button */}
@@ -194,13 +223,32 @@ const Header: React.FC = () => {
                 {/* Profile Link (Mobile) - moved to header */}
                 {/* Wallet Section */}
                 <div className="border-t border-dark-700 pt-6">
-                  <appkit-button />
+                    {/* Only show connect button if not connected */}
+                    {!isConnected && <CustomConnectButton />}
+                    {/* Show wallet address and logout if connected and SIWE signed in */}
+                    {isConnected && address && siweLoggedIn && (
+                      <span className="font-mono text-base bg-dark-800 px-3 py-1 rounded-lg text-primary mr-2">
+                        {address.slice(0, 6)}...{address.slice(-4)}
+                      </span>
+                    )}
+                    {isConnected && siweLoggedIn && (
+                      <button
+                        onClick={() => {
+                          document.cookie = 'sid=; Max-Age=0; path=/;';
+                          window.location.reload();
+                        }}
+                        className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition-all ml-2"
+                        title="Log out"
+                      >
+                        Log out
+                      </button>
+                    )}
                 </div>
 
                 {/* Footer Info */}
                 <div className="mt-8 pt-6 border-t border-dark-700">
                   <div className="text-center">
-                    <div className="text-sm text-gray-400 mb-2">Live on HyperLiquid</div>
+                    <div className="text-sm text-gray-400 mb-2">Live on Ethereum</div>
                     <div className="text-xs text-gray-500">
                       Community-driven NFT collection
                     </div>

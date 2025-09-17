@@ -8,12 +8,12 @@ const Events: React.FC = () => {
   const events = [
     {
       id: 1,
-      title: 'HyperLiquid NFT Drop',
+  title: 'Ethereum NFT Drop',
       date: '2024-08-15',
       time: '14:00 UTC',
       type: 'launch',
       status: 'upcoming',
-      description: 'Exclusive NFT collection launch on HyperLiquid chain featuring 1000 unique digital assets.',
+  description: 'Exclusive NFT collection launch on Ethereum featuring 1000 unique digital assets.',
       participants: 156,
       location: 'Virtual Event'
     },

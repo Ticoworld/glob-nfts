@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Loader from './ui/Loader';
 import { useWeb3 } from '@/contexts/Web3Context';
 import { useToast } from '@/contexts/ToastContext';
+import { fetchWithAuth } from '@/utils/authClient';
 
 const AdminTweetTasks: React.FC = () => {
   const [tweets, setTweets] = useState<any[]>([]);
@@ -16,7 +17,8 @@ const AdminTweetTasks: React.FC = () => {
     setBatchLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/batch-check-tweets', { method: 'POST' });
+      if (!isConnected || !address) throw new Error('Connect your admin wallet first.');
+      const res = await fetchWithAuth(address.toLowerCase(), '/api/batch-check-tweets', { method: 'POST' });
       const data = await res.json();
       if (res.ok) {
         setBatchResults(data.tweets);
@@ -25,8 +27,8 @@ const AdminTweetTasks: React.FC = () => {
         setError(data.error || 'Batch check failed.');
         setBatchResults(null);
       }
-    } catch {
-      setError('Server error');
+    } catch (err: any) {
+      setError(err.message || 'Server error');
       setBatchResults(null);
     } finally {
       setBatchLoading(false);
@@ -51,12 +53,13 @@ const AdminTweetTasks: React.FC = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/admin-tweet-tasks');
+      if (!isConnected || !address) throw new Error('Connect your admin wallet first.');
+      const res = await fetchWithAuth(address.toLowerCase(), '/api/admin-tweet-tasks');
       const data = await res.json();
       if (res.ok) setTweets(data.tweets);
       else setError(data.error || 'Failed to fetch tweets');
-    } catch {
-      setError('Server error');
+    } catch (err: any) {
+      setError(err.message || 'Server error');
     } finally {
       setLoading(false);
     }
@@ -84,10 +87,10 @@ const AdminTweetTasks: React.FC = () => {
     }
     setActionStatus(s => ({ ...s, [tweetId]: 'pending' }));
     try {
-      const res = await fetch('/api/admin-tweet-tasks', {
+      const res = await fetchWithAuth(address.toLowerCase(), '/api/admin-tweet-tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tweetId, action, wallet: address, rejectionReason, pointsAwarded, bonus }),
+        body: JSON.stringify({ tweetId, action, wallet: address.toLowerCase(), rejectionReason, pointsAwarded, bonus }),
       });
       const data = await res.json();
       if (res.ok && data.success) {

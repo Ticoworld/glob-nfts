@@ -1,0 +1,30 @@
+.rk-modal,
+.rk-modal__container {
+  background: #18181b !important;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45) !important;
+  font-family: 'cursive', 'graffiti', 'sans-serif' !important;
+}
+.rk-wallet-option {
+  background: #232323 !important;
+  color: #fec7a0 !important;
+  border-radius: 12px !important;
+  font-size: 1.08rem !important;
+  font-family: 'cursive', 'graffiti', 'sans-serif' !important;
+  transition: background 0.2s, color 0.2s;
+}
+.rk-wallet-option:hover {
+  background: #fec7a0 !important;
+  color: #18181b !important;
+}
+.rk-modal__header {
+  color: #fec7a0 !important;
+  font-family: 'cursive', 'graffiti', 'sans-serif' !important;
+  font-size: 1.2rem !important;
+}
+.rk-account-button__dropdown {
+  background: #232323 !important;
+  color: #fec7a0 !important;
+  border-radius: 12px !important;
+  font-family: 'cursive', 'graffiti', 'sans-serif' !important;
+}

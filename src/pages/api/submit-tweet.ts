@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '@/utils/dbConnect';
 import TweetTask from '@/models/TweetTask';
 import User from '@/models/User';
+import { requireAuth } from '@/utils/auth';
 
 // Helper that returns a Date object for start-of-week (Monday) at UTC midnight
 function getStartOfWeekUTC(date: Date): Date {
@@ -14,12 +15,19 @@ function getStartOfWeekUTC(date: Date): Date {
   return d;
 }
 
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Rate limiting
+  const { rateLimit } = require('@/utils/rateLimit');
+  if (!rateLimit(req, res)) return;
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  let { wallet, tweetUrl } = req.body;
-  if (!wallet || !tweetUrl) return res.status(400).json({ error: 'Missing wallet or tweetUrl' });
+  // Require cryptographic authentication
+  const auth = requireAuth(req, res);
+  if (!auth) return; // requireAuth already sent error response
+
+  const { wallet } = auth;
+  let { tweetUrl } = req.body;
+  if (!tweetUrl) return res.status(400).json({ error: 'Missing tweetUrl' });
 
   tweetUrl = tweetUrl.split('?')[0].replace(/\/$/, '');
   const urlMatch = tweetUrl.match(/^https?:\/\/(x\.com|twitter\.com)\/([A-Za-z0-9_]+)\/status\/(\d+)/);
@@ -39,7 +47,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(409).json({ error: 'This tweet has already been submitted.' });
   }
 
-  const user = await User.findOne({ wallet });
+  let user = await User.findOne({ wallet: wallet.toLowerCase() });
+  if (!user) {
+    user = await User.findOne({ wallet: { $regex: `^${wallet}$`, $options: 'i' } });
+  }
   if (!user || !user.twitter) return res.status(400).json({ error: 'User not found or Twitter not connected.' });
 
   const userTwitter = user.twitter.toLowerCase();

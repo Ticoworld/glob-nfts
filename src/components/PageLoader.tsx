@@ -15,7 +15,7 @@ const PageLoader: React.FC<PageLoaderProps> = ({ isLoading, onComplete }) => {
 
   const loadingMessages = [
     'Loading Glob NFTs...',
-    'Connecting to HyperLiquid...',
+  'Connecting to Ethereum...',
     'Preparing gallery...',
     'Almost ready...'
   ];
@@ -113,7 +113,7 @@ const PageLoader: React.FC<PageLoaderProps> = ({ isLoading, onComplete }) => {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="text-gray-400 mb-8"
             >
-              Community-driven NFT collection on HyperLiquid
+              Community-driven NFT collection on Ethereum
             </motion.p>
 
             {/* Loading Spinner */}

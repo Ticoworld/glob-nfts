@@ -1,13 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
-import dbConnect from '../../../utils/dbConnect';
-import User from '../../../models/User';
+import dbConnect from '@/utils/dbConnect';
+import User from '@/models/User';
+import { requireAuth } from '@/utils/auth';
+import { rateLimit } from '@/utils/rateLimit';
 
 const GLOB_NFTS_USER_ID = process.env.GLOB_NFTS_USER_ID;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { wallet } = req.body;
-  if (!wallet) return res.status(400).json({ error: 'Missing wallet' });
+  if (!rateLimit(req, res)) return;
+  // Require cryptographic authentication
+  const auth = requireAuth(req, res);
+  if (!auth) return; // requireAuth already sent error response
+
+  const { wallet } = auth;
 
   await dbConnect();
   const user = await User.findOne({ wallet });

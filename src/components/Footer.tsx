@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-gray-400 mb-6 max-w-md">
-                  Where chaos meets creativity on the HyperLiquid chain. Join the revolution of disorderly fun and discover unique NFTs created by the most chaotic minds.
+                  Where chaos meets creativity on Ethereum. Join the revolution of disorderly fun and discover unique NFTs created by the most chaotic minds.
                 </p>
                 
                 {/* Social Links */}
@@ -148,7 +148,7 @@ const Footer: React.FC = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2 text-gray-400">
-              <span>© 2025 GlobNFTs. Made with passion on HyperLiquid</span>
+              <span>© 2025 GlobNFTs. Made with passion on Ethereum</span>
             </div>
             
             <div className="flex items-center gap-6 text-sm">

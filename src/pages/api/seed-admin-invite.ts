@@ -1,8 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import dbConnect from '../../utils/dbConnect';
-import InviteCode from '../../models/InviteCode';
+import dbConnect from '@/utils/dbConnect';
+import InviteCode from '@/models/InviteCode';
+import { requireAdmin } from '@/utils/auth';
+import { rateLimit } from '@/utils/rateLimit';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (!rateLimit(req, res)) return;
+  const adminAuth = requireAdmin(req, res);
+  if (!adminAuth) return;
   await dbConnect();
   if (req.method === 'POST') {
     const { code } = req.body;

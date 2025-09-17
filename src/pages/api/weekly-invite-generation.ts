@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const users = await User.find({});
   let totalCreated = 0;
   for (const user of users) {
-    const wallet = user.wallet;
+    const wallet = user.wallet.toLowerCase();
     // Find active invites (not used, not expired)
     let invites = await InviteCode.find({ inviter: wallet, used: false, $or: [ { expiresAt: null }, { expiresAt: { $gt: now } } ] });
     // Strictly enforce max 2 active codes

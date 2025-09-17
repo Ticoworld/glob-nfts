@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { rateLimit } from '@/utils/rateLimit';
 
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -37,6 +38,7 @@ async function checkGuildMember(token: string, userId: string) {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (!rateLimit(req, res)) return;
   const { code, wallet } = req.query;
   if (!code || !wallet) return res.status(400).send('Missing code or wallet');
 

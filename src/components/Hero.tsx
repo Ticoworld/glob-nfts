@@ -72,7 +72,7 @@ const Hero: React.FC = () => {
               >
                 <div className="inline-flex items-center px-3 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-8">
                   <span className="w-2 h-2 bg-primary rounded-full mr-2 animate-pulse" />
-                  Live on HyperLiquid
+                  Live on Ethereum
                 </div>
                 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-display mb-6 leading-tight">

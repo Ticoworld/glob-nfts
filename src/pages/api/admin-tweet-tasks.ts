@@ -2,29 +2,30 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '@/utils/dbConnect';
 import TweetTask from '@/models/TweetTask';
 import User from '@/models/User';
-import { ethers } from 'ethers';
-
-const ADMIN_WALLETS = process.env.ADMIN_WALLETS?.split(',').map(w => w.trim().toLowerCase()) || [];
+import { requireAdmin } from '@/utils/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
 
-
   // GET: List all pending tweets (for admin review)
   if (req.method === 'GET') {
+    // Require admin authentication for viewing pending tweets
+    const adminAuth = requireAdmin(req, res);
+    if (!adminAuth) return; // requireAdmin already sent error response
+
     const pending = await TweetTask.find({ status: 'pending' }).sort({ createdAt: 1 });
     return res.status(200).json({ tweets: pending });
   }
 
   // POST: Update tweet status (verify or reject) - admin only
   if (req.method === 'POST') {
-    const { tweetId, action, wallet, rejectionReason, pointsAwarded, bonus } = req.body;
+    // Require cryptographic admin authentication
+    const adminAuth = requireAdmin(req, res);
+    if (!adminAuth) return; // requireAdmin already sent error response
+
+    const { tweetId, action, rejectionReason, pointsAwarded, bonus } = req.body;
     if (!tweetId || !['verified', 'rejected'].includes(action)) {
       return res.status(400).json({ error: 'Missing tweetId or invalid action' });
-    }
-    // Simple admin check (optional: check wallet against ADMIN_WALLETS)
-    if (!wallet || !ADMIN_WALLETS.includes(wallet.toLowerCase())) {
-      return res.status(403).json({ error: 'Not authorized' });
     }
     const tweet = await TweetTask.findOne({ tweetId });
     if (!tweet) return res.status(404).json({ error: 'Tweet not found' });

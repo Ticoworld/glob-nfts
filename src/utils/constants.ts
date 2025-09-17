@@ -1,7 +1,7 @@
 // App constants
 export const SITE_CONFIG = {
   name: 'GlobNFTs',
-  description: 'Where chaos meets creativity on the HyperLiquid chain',
+  description: 'Where chaos meets creativity on Ethereum',
   url: 'https://globnfts.com',
   twitter: '@TheGlobNfts',
 };

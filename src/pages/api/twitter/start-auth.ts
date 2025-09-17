@@ -1,10 +1,12 @@
 // Starts Twitter OAuth flow (placeholder)
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { rateLimit } from '@/utils/rateLimit';
 
 const CLIENT_ID = process.env.TWITTER_CLIENT_ID;
 const CALLBACK_URL = process.env.TWITTER_CALLBACK_URL;
 const SCOPE = 'tweet.read users.read follows.read offline.access';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (!rateLimit(req, res)) return;
   const { wallet } = req.query;
   if (!CLIENT_ID || !CALLBACK_URL) {
     return res.status(500).json({ error: 'Twitter OAuth not configured' });

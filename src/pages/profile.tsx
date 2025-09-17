@@ -8,46 +8,31 @@ import Glob2EarnDashboard from '../components/Glob2EarnDashboard';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useAccount } from 'wagmi';
-import { useRouter } from 'next/router';
+import { SiweLoginButton } from '../components/SiweLoginButton';
+import CustomConnectButton from '../components/CustomConnectButton';
 
 const Profile: React.FC = () => {
-  const { address, isConnected } = useAccount();
-  const router = useRouter();
-  const [checking, setChecking] = useState(true);
-  const [allowed, setAllowed] = useState(false);
+
+  // SIWE login gate: show login button if not authenticated
+  // You may want to check for a session cookie/JWT here
+  // For demo, always show login button at top
+
+  // TODO: Replace with session check for production
+  const [siweLoggedIn, setSiweLoggedIn] = useState(false);
 
   useEffect(() => {
-    const checkRegistration = async () => {
-      if (!isConnected || !address) {
-        setAllowed(false);
-        setChecking(false);
-        return;
-      }
-      try {
-        const res = await fetch(`/api/check-user?wallet=${address}`);
-        const data = await res.json();
-        if (res.ok && data.registered) {
-          setAllowed(true);
-        } else {
-          setAllowed(false);
-          router.replace('/');
-        }
-      } catch {
-        setAllowed(false);
-        router.replace('/');
-      } finally {
-        setChecking(false);
-      }
-    };
-    checkRegistration();
-  }, [isConnected, address, router]);
+    // Example: check for SIWE session cookie
+    setSiweLoggedIn(document.cookie.includes('sid='));
+  }, []);
 
-  if (checking) {
-    return <div className="min-h-screen flex items-center justify-center text-primary text-xl">Checking access...</div>;
-  }
-
-  if (!allowed) {
-    return null;
+  if (!siweLoggedIn) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-6">
+  <CustomConnectButton />
+        <SiweLoginButton />
+        <div className="mt-4 text-primary text-lg">Sign in with your wallet to access your profile.</div>
+      </div>
+    );
   }
 
   return (

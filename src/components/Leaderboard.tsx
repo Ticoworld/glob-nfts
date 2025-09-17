@@ -41,7 +41,7 @@ const Leaderboard: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-xl text-gray-400 max-w-2xl mx-auto"
           >
-            The most chaotic Globbers ruling the HyperLiquid chain. Will you be next?
+            The most chaotic Globbers ruling the Ethereum chain. Will you be next?
           </motion.p>
         </div>
         
@@ -104,10 +104,11 @@ const Leaderboard: React.FC = () => {
                     status = 'FCFS';
                     badgeClass = 'bg-yellow-900 text-yellow-400';
                   }
+                  const walletKey = (user.wallet || '').toLowerCase() + '-' + idx;
                   return (
-                    <div key={user.wallet} className="grid grid-cols-12 gap-4 py-4 items-center">
+                    <div key={walletKey} className="grid grid-cols-12 gap-4 py-4 items-center">
                       <div className="col-span-1 font-bold text-primary">{idx + 1}</div>
-                      <div className="col-span-4 font-mono text-white truncate">{user.wallet}</div>
+                      <div className="col-span-4 font-mono text-white truncate">{(user.wallet || '').toLowerCase()}</div>
                       <div className="col-span-3 text-green-400 font-bold">{user.points}</div>
                       <div className="col-span-4">
                         {status && (

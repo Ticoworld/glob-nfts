@@ -3,6 +3,7 @@
 import { useToast } from '../contexts/ToastContext';
 import React, { useState } from 'react';
 import { useAccount } from 'wagmi';
+import { fetchWithAuth } from '@/utils/authClient';
 import LoadingSpinner from './ui/LoadingSpinner';
 
 
@@ -10,8 +11,32 @@ const InviteGate: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checkingStatus, setCheckingStatus] = useState(true);
   const { isConnected, address } = useAccount();
   const { success, error: toastError } = useToast();
+
+  // Check registration status on mount (requires SIWE cookie and signed headers)
+  React.useEffect(() => {
+    (async () => {
+      try {
+        if (!isConnected || !address) {
+          setCheckingStatus(false);
+          return;
+        }
+  const res = await fetchWithAuth(address, '/api/check-user', { method: 'GET' });
+        const data = await res.json();
+        if (res.ok && data.registered) {
+          success('Welcome back!');
+          onSuccess();
+          return;
+        }
+      } catch (err) {
+        console.warn('[InviteGate] check-user failed', err);
+      } finally {
+        setCheckingStatus(false);
+      }
+    })();
+  }, [isConnected, address]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +59,10 @@ const InviteGate: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
         setError('');
         success('Invite code accepted! Welcome.');
         onSuccess();
+      } else if (res.status === 409 && data.error === 'User already registered') {
+        success('You are already registered. Redirecting...');
+        onSuccess();
+        return;
       } else {
         setError(data.error || 'Invalid invite code.');
         toastError(data.error || 'Invalid invite code.');
@@ -46,12 +75,14 @@ const InviteGate: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
     }
   };
 
+  if (checkingStatus) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-dark-900/90">
       <form onSubmit={handleSubmit} className="bg-dark-800 p-8 rounded-xl shadow-xl w-full max-w-sm flex flex-col gap-4 border border-dark-700">
         <h2 className="text-xl font-bold text-center text-primary mb-2">Enter Invite Code</h2>
         <div className="flex flex-col gap-2 items-center">
-          <appkit-button />
+          {/* Wallet connect button removed: use RainbowKit wallet UI instead */}
           {isConnected && address && (
             <div className="text-xs text-gray-400 mt-1">Connected: <span className="font-mono">{address.slice(0, 6)}...{address.slice(-4)}</span></div>
           )}

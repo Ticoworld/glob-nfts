@@ -23,7 +23,14 @@ const TwitterConnect: React.FC = () => {
       console.log('TwitterConnect: Checking status for wallet', address);
       try {
         const res = await fetch(`/api/twitter/status?wallet=${address}`);
-        if (!res.ok) throw new Error('Not connected');
+        if (!res.ok) {
+          setConnected(false);
+          setTwitterHandle('');
+          setAvatar(null);
+          setError('Twitter not connected. Please link your Twitter account.');
+          setLoading(false);
+          return;
+        }
         const data = await res.json();
         // Debug: log the response
         console.log('TwitterConnect: status response', data);
@@ -31,16 +38,18 @@ const TwitterConnect: React.FC = () => {
           setConnected(true);
           setTwitterHandle(data.twitterHandle);
           setAvatar(data.avatarUrl || null);
+          setError('');
         } else {
           setConnected(false);
           setTwitterHandle('');
           setAvatar(null);
+          setError('Twitter not connected. Please link your Twitter account.');
         }
       } catch (err) {
         setConnected(false);
         setTwitterHandle('');
         setAvatar(null);
-        // Debug: log the error
+        setError('Unable to check Twitter status.');
         console.error('TwitterConnect: status fetch error', err);
       } finally {
         setLoading(false);

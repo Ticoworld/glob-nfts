@@ -4,20 +4,27 @@ import InviteCode from '../../models/InviteCode';
 import User from '../../models/User';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Rate limiting
+  const { rateLimit } = require('../../utils/rateLimit');
+  if (!rateLimit(req, res)) return;
   await dbConnect();
 
   if (req.method === 'POST') {
-    const { code, wallet } = req.body;
+    let { code, wallet } = req.body;
     if (!code || !wallet) {
       return res.status(400).json({ error: 'Missing code or wallet' });
     }
+    wallet = wallet.toLowerCase();
     // Find invite code
     const invite = await InviteCode.findOne({ code: code.trim().toUpperCase(), used: false });
     if (!invite) {
       return res.status(404).json({ error: 'Invalid or used invite code' });
     }
-    // Check if user already exists
-    const existingUser = await User.findOne({ wallet });
+    // Check if user already exists (lowercase, fallback for legacy)
+    let existingUser = await User.findOne({ wallet });
+    if (!existingUser) {
+      existingUser = await User.findOne({ wallet: { $regex: `^${wallet}$`, $options: 'i' } });
+    }
     if (existingUser) {
       return res.status(409).json({ error: 'User already registered' });
     }
@@ -26,14 +33,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     invite.usedBy = wallet;
     await invite.save();
     // Award points to inviter if exists
-    if (invite.inviter) {
-      const inviterUser = await User.findOne({ wallet: invite.inviter });
+    let inviterWallet = invite.inviter ? invite.inviter.toLowerCase() : null;
+    if (inviterWallet) {
+      let inviterUser = await User.findOne({ wallet: inviterWallet });
+      if (!inviterUser) {
+        inviterUser = await User.findOne({ wallet: { $regex: `^${inviterWallet}$`, $options: 'i' } });
+      }
       if (inviterUser) {
         inviterUser.points = (inviterUser.points || 0) + 10; // 10 points per referral
         await inviterUser.save();
       }
     }
-    // Create user
+    // Create user (store wallet in lowercase)
     const user = await User.create({ wallet, invites: [] });
     // Immediately create 2 invite codes for the new user
     const now = new Date();

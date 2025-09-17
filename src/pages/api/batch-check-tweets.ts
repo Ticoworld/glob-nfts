@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '@/utils/dbConnect';
 import TweetTask from '@/models/TweetTask';
+import { rateLimit } from '@/utils/rateLimit';
 
 // Helper to fetch tweet data from Twitter API
 async function fetchTweetData(tweetIds: string[], bearerToken: string) {
@@ -17,6 +18,7 @@ async function fetchTweetData(tweetIds: string[], bearerToken: string) {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (!rateLimit(req, res)) return;
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

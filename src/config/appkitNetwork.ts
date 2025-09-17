@@ -13,18 +13,18 @@ type LocalAppKitNetwork = {
   testnet: boolean;
 };
 
-export const hyperEVMNetwork: LocalAppKitNetwork = {
-  id: 999,
-  chainId: '0x3e7',
+import { mainnet } from 'wagmi/chains';
+
+export const appkitNetworks: [LocalAppKitNetwork] = [{
+  id: mainnet.id,
+  chainId: `0x${mainnet.id.toString(16)}`,
   chainNamespace: 'eip155',
   chainType: 'evm',
-  chainReference: '999',
-  caipNetworkId: 'eip155:999',
-  name: 'Hyperliquid EVM',
-  nativeCurrency: { name: 'Hyperliquid', symbol: 'HYPE', decimals: 18 },
-  rpcUrls: { default: { http: ['https://rpc.hyperliquid.xyz/evm'] } },
-  blockExplorers: { default: { name: 'Hyperliquid Explorer', url: 'https://hyperevmscan.io/' } },
+  chainReference: String(mainnet.id),
+  caipNetworkId: `eip155:${mainnet.id}`,
+  name: mainnet.name,
+  nativeCurrency: mainnet.nativeCurrency,
+  rpcUrls: { default: { http: [...mainnet.rpcUrls.default.http] as string[] } },
+  blockExplorers: { default: { name: mainnet.blockExplorers?.default.name || 'Etherscan', url: mainnet.blockExplorers?.default.url || 'https://etherscan.io' } },
   testnet: false,
-};
-
-export const appkitNetworks: [LocalAppKitNetwork] = [hyperEVMNetwork];
+}];

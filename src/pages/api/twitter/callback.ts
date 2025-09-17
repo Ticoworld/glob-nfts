@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
-import dbConnect from '../../../utils/dbConnect';
-import User from '../../../models/User';
+import dbConnect from '@/utils/dbConnect';
+import User from '@/models/User';
+import { rateLimit } from '@/utils/rateLimit';
 
 const CLIENT_ID = process.env.TWITTER_CLIENT_ID;
 const CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET;
@@ -9,6 +10,7 @@ const CALLBACK_URL = process.env.TWITTER_CALLBACK_URL;
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (!rateLimit(req, res)) return;
   const { code, state } = req.query;
   if (!code) return res.status(400).send('Missing code');
   let wallet = '';
@@ -21,8 +23,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-  await dbConnect();
-  console.log('Twitter callback for wallet:', wallet);
+    await dbConnect();
+    console.log('Twitter callback for wallet:', wallet);
     // Exchange code for access token
     const tokenRes = await axios.post('https://api.twitter.com/2/oauth2/token', new URLSearchParams({
       code: code as string,
@@ -35,9 +37,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       auth: { username: CLIENT_ID!, password: CLIENT_SECRET! },
     });
 
-  const { access_token } = tokenRes.data;
-  if (!access_token) throw new Error('No access token');
-  console.log('Got Twitter access token');
+    const { access_token } = tokenRes.data;
+    if (!access_token) throw new Error('No access token');
+    console.log('Got Twitter access token');
 
     // Get user info (with profile image)
     const userRes = await axios.get('https://api.twitter.com/2/users/me?user.fields=profile_image_url', {

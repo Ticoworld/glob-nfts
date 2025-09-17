@@ -1,6 +1,9 @@
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
+import { SiweLoginButton } from '../components/SiweLoginButton';
+import CustomConnectButton from '../components/CustomConnectButton';
 import Head from 'next/head';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
@@ -15,96 +18,70 @@ import InviteGate from '../components/InviteGate';
 import Leaderboard from '../components/Leaderboard';
 
 const Home: React.FC = () => {
-  const { address, isConnected } = useAccount();
-  const [allowed, setAllowed] = useState(false);
-  const [checking, setChecking] = useState(true);
+
+  // SIWE login gate: show login button if not authenticated
+  // You may want to check for a session cookie/JWT here
+  // For demo, always show login button at top
+
+  // TODO: Replace with session check for production
+  const [siweLoggedIn, setSiweLoggedIn] = useState(false);
 
   useEffect(() => {
-    const checkRegistration = async () => {
-      if (!isConnected || !address) {
-        setAllowed(false);
-        setChecking(false);
-        return;
-      }
-      // Always check DB for registration before using localStorage
-      const localKey = `glob_registered_${address}`;
-      setChecking(true);
-      try {
-        const res = await fetch(`/api/check-user?wallet=${address}`);
-        const data = await res.json();
-        if (res.ok && data.registered) {
-          setAllowed(true);
-          if (typeof window !== 'undefined') {
-            localStorage.setItem(localKey, 'true');
-          }
-        } else {
-          setAllowed(false);
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem(localKey);
-          }
-        }
-      } catch {
-        setAllowed(false);
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem(localKey);
-        }
-      } finally {
-        setChecking(false);
-      }
-    };
-    checkRegistration();
-  }, [isConnected, address]);
+    // Example: check for SIWE session cookie
+    setSiweLoggedIn(document.cookie.includes('sid='));
+  }, []);
 
-  if (checking) {
-    return <div className="min-h-screen flex items-center justify-center text-primary text-xl">Checking access...</div>;
-  }
+  const { address, isConnected } = useAccount();
+  const handleLogout = () => {
+    document.cookie = 'sid=; Max-Age=0; path=/;';
+    window.location.reload();
+  };
 
-  if (!allowed) {
-    return <InviteGate onSuccess={async () => {
-      // After invite, re-check registration from backend for best practice
-      if (address) {
-        try {
-          const res = await fetch(`/api/check-user?wallet=${address}`);
-          const data = await res.json();
-          if (res.ok && data.registered) {
-            setAllowed(true);
-            if (typeof window !== 'undefined') {
-              localStorage.setItem(`glob_registered_${address}`, 'true');
-            }
-          } else {
-            setAllowed(false);
-            if (typeof window !== 'undefined') {
-              localStorage.removeItem(`glob_registered_${address}`);
-            }
-          }
-        } catch {
-          setAllowed(false);
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem(`glob_registered_${address}`);
-          }
-        }
-      } else {
-        setAllowed(false);
-      }
-    }} />;
+  // Gate: must have wallet connected and SIWE session cookie
+  if (!isConnected || !address || !siweLoggedIn) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-8 px-4">
+        <div className="flex flex-col items-center gap-2 w-full max-w-md">
+          <CustomConnectButton />
+          {isConnected && address && (
+            <div className="w-full bg-dark-800 rounded-lg px-4 py-2 text-center text-primary font-mono text-base break-all border border-dark-700 mt-2">
+              {address}
+            </div>
+          )}
+        </div>
+        {/* Show SIWE sign-in only if wallet is connected */}
+        {isConnected && address && <SiweLoginButton />}
+        <div className="mt-4 text-primary text-lg text-center">Sign in with your wallet to continue.</div>
+  {/* Invite gate appears AFTER SIWE; InviteGate itself will auto-skip registered users */}
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-  <title>GlobNFTs | Chaotic Community-Driven NFT Collection</title>
-  <meta name="description" content="GlobNFTs is a chaotic, community-driven NFT collection on HyperLiquid. Make posts, earn points, climb the leaderboard, and unlock future utility as a holder." />
-  <meta name="keywords" content="NFT, HyperLiquid, Blockchain, Digital Art, Collectibles, Community, Leaderboard, Creativity, Web3" />
+        <title>GlobNFTs | Chaotic Community-Driven NFT Collection</title>
+  <meta name="description" content="GlobNFTs is a chaotic, community-driven NFT collection on Ethereum. Make posts, earn points, climb the leaderboard, and unlock future utility as a holder." />
+  <meta name="keywords" content="NFT, Ethereum, Blockchain, Digital Art, Collectibles, Community, Leaderboard, Creativity, Web3" />
       </Head>
       <Header />
       <main className="flex-grow" role="main">
+        <div className="flex justify-end items-center p-4">
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition-all"
+            title="Log out"
+          >
+            Log out
+          </button>
+        </div>
         <Hero />
-  <AboutSection />
-  <ChaosBattleSection />
-  <WhitelistSection />
-  <Leaderboard />
-  <Gallery />
-  <CommunitySection />
+        <AboutSection />
+        <ChaosBattleSection />
+        <WhitelistSection />
+        <Leaderboard />
+        <Gallery />
+        <CommunitySection />
       </main>
       <Footer />
     </div>

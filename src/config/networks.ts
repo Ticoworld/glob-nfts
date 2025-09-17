@@ -1,34 +1,20 @@
-// ...removed invalid object literal and export...
-// Wagmi/viem chain object
-import { defineChain } from 'viem';
+import { mainnet } from 'wagmi/chains';
 
-export const hyperEVMChain = defineChain({
-  id: 999,
-  name: 'Hyperliquid EVM',
-  nativeCurrency: { name: 'Hyperliquid', symbol: 'HYPE', decimals: 18 },
-  rpcUrls: {
-    default: { http: ['https://rpc.hyperliquid.xyz/evm'] },
+// For now we only target Ethereum mainnet
+export const wagmiChains = [mainnet];
+// If an AppKit network list is required elsewhere, mirror Ethereum mainnet
+export const appkitNetworks = [
+  {
+    id: mainnet.id,
+    chainId: `0x${mainnet.id.toString(16)}`,
+    chainNamespace: 'eip155',
+    chainType: 'evm',
+    chainReference: String(mainnet.id),
+    caipNetworkId: `eip155:${mainnet.id}`,
+    name: mainnet.name,
+    nativeCurrency: mainnet.nativeCurrency,
+    rpcUrls: { default: { http: mainnet.rpcUrls.default.http } },
+    blockExplorers: { default: { name: mainnet.blockExplorers?.default.name || 'Etherscan', url: mainnet.blockExplorers?.default.url || 'https://etherscan.io' } },
+    testnet: false,
   },
-  blockExplorers: {
-    default: { name: 'Hyperliquid Explorer', url: 'https://hyperevmscan.io/' },
-  },
-  testnet: false,
-});
-
-// AppKit CAIP-2 network object
-export const hyperEVMNetwork = {
-  id: 999,
-  chainId: '0x3e7',
-  chainNamespace: 'eip155',
-  chainType: 'evm',
-  chainReference: '999',
-  caipNetworkId: 'eip155:999',
-  name: 'Hyperliquid EVM',
-  nativeCurrency: { name: 'Hyperliquid', symbol: 'HYPE', decimals: 18 },
-  rpcUrls: { default: { http: ['https://rpc.hyperliquid.xyz/evm'] } },
-  blockExplorers: { default: { name: 'Hyperliquid Explorer', url: 'https://hyperevmscan.io/' } },
-  testnet: false,
-};
-
-export const wagmiChains = [hyperEVMChain];
-export const appkitNetworks = [hyperEVMNetwork];
+];

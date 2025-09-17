@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '@/utils/dbConnect';
 import InviteCode from '@/models/InviteCode';
 import User from '@/models/User';
+import { requireAuth } from '@/utils/auth';
 
 // Helper to generate a random invite code
 function generateCode() {
@@ -14,19 +15,28 @@ function generateCode() {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Rate limiting
+  const { rateLimit } = require('@/utils/rateLimit');
+  if (!rateLimit(req, res)) return;
   await dbConnect();
 
   if (req.method === 'POST') {
-    const { wallet } = req.body;
-    if (!wallet) return res.status(400).json({ error: 'Missing wallet' });
+    // Require cryptographic authentication
+    const auth = requireAuth(req, res);
+    if (!auth) return; // requireAuth already sent error response
 
-    // Find user
-    const user = await User.findOne({ wallet });
+    let { wallet } = auth;
+    wallet = wallet.toLowerCase();
+    // Find user (lowercase, fallback for legacy)
+    let user = await User.findOne({ wallet });
+    if (!user) {
+      user = await User.findOne({ wallet: { $regex: `^${wallet}$`, $options: 'i' } });
+    }
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-  // Find all invites by this user
-  const now = new Date();
-  let invites = await InviteCode.find({ inviter: wallet });
+    // Find all invites by this user (lowercase)
+    const now = new Date();
+    let invites = await InviteCode.find({ inviter: wallet });
 
   // Calculate status and points earned for each invite
   let invitePoints = 0;
