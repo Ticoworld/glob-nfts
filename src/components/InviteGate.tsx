@@ -78,7 +78,7 @@ const InviteGate: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   if (checkingStatus) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-dark-900/90">
+    <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-dark-900/90">
       <form onSubmit={handleSubmit} className="bg-dark-800 p-8 rounded-xl shadow-xl w-full max-w-sm flex flex-col gap-4 border border-dark-700">
         <h2 className="text-xl font-bold text-center text-primary mb-2">Enter Invite Code</h2>
         <div className="flex flex-col gap-2 items-center">

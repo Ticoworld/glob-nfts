@@ -66,15 +66,6 @@ const Home: React.FC = () => {
       </Head>
       <Header />
       <main className="flex-grow" role="main">
-        <div className="flex justify-end items-center p-4">
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition-all"
-            title="Log out"
-          >
-            Log out
-          </button>
-        </div>
         <Hero />
         <AboutSection />
         <ChaosBattleSection />

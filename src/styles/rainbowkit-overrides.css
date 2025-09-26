@@ -1,8 +1,10 @@
-/* Ensure RainbowKit modal is always above all content and does not break scrolling */
-.rk-modal,
-.rk-modal__container {
-  z-index: 99999 !important;
+/* Ensure RainbowKit modal stays visible on scroll and is layered correctly */
+.rk-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99998 !important; /* backdrop below container but above app */
 }
+
 .rk-modal__container {
   position: fixed !important;
   left: 50% !important;
@@ -11,6 +13,7 @@
   max-width: 360px !important;
   z-index: 99999 !important;
 }
+
 .rk-account-button__dropdown {
   z-index: 99999 !important;
 }

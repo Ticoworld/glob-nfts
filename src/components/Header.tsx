@@ -112,26 +112,7 @@ const Header: React.FC = () => {
                 <FiUser size={20} />
               </Link>
               <div className="min-w-[220px] max-w-xs text-base rounded-xl flex items-center justify-center">
-                  {/* Only show connect button if not connected */}
-                  {!isConnected && <CustomConnectButton />}
-                  {/* Show wallet address and logout if connected and SIWE signed in */}
-                  {isConnected && address && siweLoggedIn && (
-                    <span className="font-mono text-base bg-dark-800 px-3 py-1 rounded-lg text-primary mr-2">
-                      {address.slice(0, 6)}...{address.slice(-4)}
-                    </span>
-                  )}
-                  {isConnected && siweLoggedIn && (
-                    <button
-                      onClick={() => {
-                        document.cookie = 'sid=; Max-Age=0; path=/;';
-                        window.location.reload();
-                      }}
-                      className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition-all ml-2"
-                      title="Log out"
-                    >
-                      Log out
-                    </button>
-                  )}
+                <CustomConnectButton />
               </div>
             </motion.div>
 
@@ -223,26 +204,7 @@ const Header: React.FC = () => {
                 {/* Profile Link (Mobile) - moved to header */}
                 {/* Wallet Section */}
                 <div className="border-t border-dark-700 pt-6">
-                    {/* Only show connect button if not connected */}
-                    {!isConnected && <CustomConnectButton />}
-                    {/* Show wallet address and logout if connected and SIWE signed in */}
-                    {isConnected && address && siweLoggedIn && (
-                      <span className="font-mono text-base bg-dark-800 px-3 py-1 rounded-lg text-primary mr-2">
-                        {address.slice(0, 6)}...{address.slice(-4)}
-                      </span>
-                    )}
-                    {isConnected && siweLoggedIn && (
-                      <button
-                        onClick={() => {
-                          document.cookie = 'sid=; Max-Age=0; path=/;';
-                          window.location.reload();
-                        }}
-                        className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition-all ml-2"
-                        title="Log out"
-                      >
-                        Log out
-                      </button>
-                    )}
+                  <CustomConnectButton />
                 </div>
 
                 {/* Footer Info */}

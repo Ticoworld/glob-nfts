@@ -52,6 +52,17 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [])
 
+  // Lock body scroll while RainbowKit modal is open to avoid scroll-related disappearance
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const observer = new MutationObserver(() => {
+      const modalOpen = !!document.querySelector('.rk-modal__container, .rk-modal');
+      document.body.classList.toggle('modal-open', modalOpen);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [])
+
   // Prevent flash of unstyled content
   if (!mounted) {
     return null

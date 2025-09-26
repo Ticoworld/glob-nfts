@@ -16,6 +16,12 @@ body {
   font-feature-settings: 'rlig' 1, 'calt' 1;
 }
 
+/* Lock body scroll when any modal takes over the screen */
+body[aria-hidden='true'],
+body.modal-open {
+  overflow: hidden !important;
+}
+
 /* Professional Gradient Borders */
 .gradient-border {
   position: relative;
