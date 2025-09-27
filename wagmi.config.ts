@@ -6,7 +6,7 @@ import { mainnet } from 'wagmi/chains'
 // Setup RainbowKit connectors for Ethereum mainnet
 const { connectors } = getDefaultWallets({
   appName: 'GlobNFTs',
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_ID!,
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_ID || process.env.NEXT_PUBLIC_PROJECT_ID,
 })
 
 // Create wagmi config for Ethereum mainnet only
