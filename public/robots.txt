@@ -1,0 +1,6 @@
+# GlobNFTs Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://glob-nfts.vercel.app/sitemap.xml
